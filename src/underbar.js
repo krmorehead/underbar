@@ -295,7 +295,24 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var resultsSoFar = {};
+
+    return function(){
+      var key = ""
+      _.each(arguments, function(el){
+        key += el.toString()
+      })
+
+      if(resultsSoFar[key] === undefined){
+        resultsSoFar[key] = func.apply(this,arguments);
+      }
+
+      return resultsSoFar[key]
+    }
   };
+
+  var memoAdd = _.memoize(function(a,b){return a + b})
+  memoAdd(1, 2)
 
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
