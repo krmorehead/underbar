@@ -311,8 +311,6 @@
     }
   };
 
-  var memoAdd = _.memoize(function(a,b){return a + b})
-  memoAdd(1, 2)
 
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
