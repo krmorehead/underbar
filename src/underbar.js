@@ -201,7 +201,12 @@
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
+    if(!iterator){iterator = function(x){return x}}
     // TIP: There's a very clever way to re-use every() here.
+    return !_.every(collection, function(x){
+      return !(iterator(x))
+    })
+
   };
 
 
