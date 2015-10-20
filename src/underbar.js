@@ -347,6 +347,14 @@
       arrayCopy[randIdx] = el;
       arrayCopy[idx] = otherEl;
     })
+
+    var sameArray = true
+    for(var idx = 0; idx < array.length; idx++){
+      if(array[idx] != arrayCopy[idx]){sameArray = false}
+    }
+
+    if(sameArray){return _.shuffle(array)}
+
     return arrayCopy
   };
 
