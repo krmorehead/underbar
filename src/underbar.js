@@ -370,13 +370,71 @@
   // Calls the method named by functionOrKey on each value in the list.
   // Note: You will need to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
+    var result = []
+    //get the function if it's just a key
+
+    _.each(collection,function(el){
+      if(typeof(functionOrKey) === 'string'){
+        var func = el[functionOrKey]
+      }
+      else{var func = functionOrKey}
+    
+      result.push(func.apply(el, args))
+    })
+    return result
   };
+  //fun.apply(thisArg, [argsArray])
 
   // Sort the object's values by a criterion produced by an iterator.
   // If iterator is a string, sort objects by that property with the name
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
+    var results = [];
+    var storedValue = NaN;
+    var storedEl = NaN
+    _.each(collection, function(el, idx){ 
+      if(typeof(iterator) === "string"){
+        var tempValue = el[iterator]; 
+      }
+      else{
+        tempValue = iterator(el)
+      }
+      //helpful the first time 
+      if(storedValue !== storedValue){
+        storedValue = tempValue
+        storedEl = el
+      }
+
+      else{
+        switch(true){
+          case (storedValue === undefined):
+            results.push(el);
+            break;
+
+          case(storedValue > tempValue):
+            results.push(el);
+            break;
+
+          default:
+            results.push(storedEl)
+            storedValue = tempValue;
+            storedEl = el;
+        }
+      } 
+
+    })
+    results.push(storedEl)    
+
+
+    var sameArray = true
+    for(var idx = 0; idx < results.length; idx++){
+      if(results[idx] != collection[idx]){sameArray = false}
+    }
+
+    if(!sameArray){return _.sortBy(results, iterator)}
+
+    return results
   };
 
   // Zip together two or more arrays with elements of the same index
@@ -385,6 +443,18 @@
   // Example:
   // _.zip(['a','b','c','d'], [1,2,3]) returns [['a',1], ['b',2], ['c',3], ['d',undefined]]
   _.zip = function() {
+    var results = []
+    var args = _.sortBy(arguments, "length")
+    var maxLength = args.slice(-1)[0].length
+
+    for(var i = 0; i < maxLength; i++){
+      results[i] = []
+      _.each(arguments,function(argumentArray){
+        results[i].push(argumentArray[i])
+      })
+    }
+    return results
+
   };
 
   // Takes a multidimensional array and converts it to a one-dimensional array.
@@ -392,6 +462,10 @@
   //
   // Hint: Use Array.isArray to check if something is an array
   _.flatten = function(nestedArray, result) {
+    return _.reduce(nestedArray,function(accum, el){
+      if(Array.isArray(el)){return accum.concat(_.flatten(el))}
+      else{return accum.concat(el)}
+    }, [])
   };
 
   // Takes an arbitrary number of arrays and produces an array that contains
